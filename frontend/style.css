@@ -1,0 +1,185 @@
+/* 로고 */
+.logo-img {
+    width: 250px;
+}
+
+/*네비게이션 버튼*/
+button[kind="secondary"] {
+    background: none !important;
+    border: none !important;
+    font-size: 18px !important;
+    font-weight: 400 !important;
+    color: #333 !important;
+    padding: 5px 10px !important;
+    cursor: pointer;
+    margin: 0 auto;
+    position: relative;
+    transition: all 0.2s ease;
+}
+
+/* 내부 span */
+button[kind="secondary"] span {
+    position: relative;
+    display: inline-block;
+}
+
+/* hover 효과 */
+button[kind="secondary"]:hover {
+    transform: scale(1.05);
+    font-weight: 600 !important;
+}
+
+/* 밑줄 기본 */
+button[kind="secondary"] span::after {
+    content: "";
+    position: absolute;
+    left: 0;
+    bottom: -4px;
+    width: 0%;
+    height: 2px;
+    background: #ff3b3b;
+    transition: width 0.3s ease;
+}
+
+/* hover 시 밑줄 */
+button[kind="secondary"]:hover span::after {
+    width: 100%;
+}
+
+/* 클릭 효과 제거 */
+button:focus {
+    outline: none !important;
+    box-shadow: none !important;
+}
+
+
+/*시작하기 디자인*/
+.start-center {
+    text-align: center;
+    margin-top: -40px;
+}
+
+.start-btn {
+    background: linear-gradient(135deg, #ff6a6a, #ff3b3b);
+    color: white !important;
+    padding: 14px 32px;
+    border-radius: 16px;
+    display: inline-block;
+    font-weight: 600;
+    font-size: 16px;
+    text-decoration: none !important;
+    transition: all 0.3s ease;
+}
+
+.start-btn:hover {
+    transform: translateY(-3px);
+    box-shadow: 0px 8px 20px rgba(255, 59, 59, 0.25);
+    background: linear-gradient(135deg, #ff7a7a, #ff4b4b);
+}
+
+
+
+/* 제목 SECTION */
+.hero {
+    text-align: center;
+    padding: 80px 20px;
+    position: relative;
+}
+
+.hero h1 {
+    font-size: 48px;
+    font-weight: 700;
+}
+
+.hero h1 span {
+    color: #ff3b3b;
+    display: block;
+}
+
+.hero p {
+    max-width: 700px;
+    margin: 20px auto;
+    color: #555;
+    font-size: 18px;
+}
+
+
+
+/* 카드 */
+.card {
+    background: white;
+    padding: 40px 20px;
+    margin-top: 60px;
+    text-align: center;
+    border-radius: 20px;
+    box-shadow: 0px 10px 25px rgba(0,0,0,0.05);
+    transition: all 0.3s ease;
+}
+
+.card:hover {
+    transform: translateY(-10px);
+    box-shadow: 0px 20px 40px rgba(0,0,0,0.1);
+}
+
+.card h2 {
+    color: #ff3b3b;
+    font-size: 28px;
+}
+
+.card p {
+    color: #666;
+}
+
+
+
+/* 애니메이션*/
+.fade-up {
+    opacity: 0;
+    transform: translateY(30px);
+    animation: fadeUp 0.8s ease forwards;
+}
+
+@keyframes fadeUp {
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.hero::after {
+    content: "";
+    position: absolute;
+    width: 300px;
+    height: 300px;
+    background: rgba(255, 0, 0, 0.05);
+    border-radius: 50%;
+    top: -50px;
+    right: 20%;
+    z-index: -1;
+    animation: float 4s ease-in-out infinite;
+}
+
+.hero::before {
+    content: "";
+    position: absolute;
+    width: 180px;
+    height: 180px;
+    background: rgba(255, 0, 0, 0.04);
+    border-radius: 50%;
+    bottom: -40px;
+    left: 10%;
+    z-index: -1;
+    animation: float2 5s ease-in-out infinite;
+}
+
+@keyframes float {
+    0% { transform: translateY(0px); }
+    50% { transform: translateY(20px); }
+    100% { transform: translateY(0px); }
+}
+
+@keyframes float2 {
+    0% { transform: translateY(0px); }
+    50% { transform: translateY(-15px); }
+    100% { transform: translateY(0px); }
+}
