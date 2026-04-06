@@ -1,3 +1,8 @@
 fastapi
 uvicorn[standard]
+pandas
+openai
+python-dotenv
 psycopg2-binary
+langchain
+langchain-openai

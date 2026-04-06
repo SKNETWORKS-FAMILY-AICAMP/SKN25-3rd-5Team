@@ -16,6 +16,8 @@ services:
       - "${BACKEND_PORT}:8000"
     env_file:
       - .env
+    volumes:
+      - ./여행지.csv:/app/여행지.csv:ro
     depends_on:
       - db
 
