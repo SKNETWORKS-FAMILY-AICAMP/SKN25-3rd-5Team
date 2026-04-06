@@ -2,12 +2,11 @@ import streamlit as st
 import requests
 
 def render():
-
     st.title("맞춤형 여행지 추천")
     st.write("설정한 조건에 맞춰 최적의 여행 추천지를 보여줍니다.")
     st.divider()
 
-    # 필터 (예시 입력 -> 수정 예정)
+    # 필터 
     col1, col2 = st.columns(2)
 
     with col1:
@@ -33,28 +32,14 @@ def render():
 
     with col2:
         purpose = st.selectbox("여행 목적", [
-            "가족/친지 방문",
-            "교육/체험 프로그램",
-            "교육/훈련/연수",
-            "드라마 촬영지 방문",
-            "문화예술/전시 관람",
-            "스포츠 경기관람",
-            "시티투어",
-            "야외 스포츠/레포츠",
-            "역사 유적지 방문",
-            "온천/스파",
-            "유흥/오락",
-            "자연 및 풍경감상",
-            "종교/성지순례",
-            "지역 축제/이벤트",
-            "카지노/경마 등",
-            "테마파크/동식물원",
-            "회의참가/시찰",
-            "휴식/휴양",
-            "쇼핑",
-            "음식관광",
-            "기타"
-        ])
+        "관광지",
+        "음식점",
+        "숙박",
+        "문화시설",
+        "레포츠",
+        "쇼핑",
+        "축제/공연/행사"
+    ])
 
     col3, col4 = st.columns(2)
 
@@ -120,19 +105,35 @@ def render():
 
         data = res.json()
 
-        results = data.get("results", [])
+        results = data["results"]["items"]
 
-        st.write(f"Showing {len(results)} results")
-
+        def get_source_label(source):
+            if source == "pet":
+                return "🐶 반려동물 가능"
+            elif source == "barrier_free":
+                return "♿ 무장애 여행지"
+            else:
+                return "📍 일반 관광지"
+            
+        # 출력 값
         if len(results) == 0:
             st.warning("조건에 맞는 여행지가 없습니다 😢")
         else:
-            for row in results:
-                col1, col2 = st.columns([2,1])
+            for item in results:
+                st.markdown(f"""
+                ### 📍 {item['title']}
 
-                with col1:
-                    st.markdown(f"""
-                    ### 📍 {row['title']}
-                    - 지역: {row['sido']}
-                    - 유형: {row['type']}
-                    """)
+                📍 **지역**  
+                {item['region']}
+
+                🏷 **유형**  
+                {item.get('tag', '추천')}
+
+                {get_source_label(item['source'])}
+
+                💡 **추천 이유**  
+                {item['description']}
+                """)
+                st.divider()
+        
+    

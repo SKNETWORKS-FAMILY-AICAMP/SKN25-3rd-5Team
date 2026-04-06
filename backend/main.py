@@ -1,6 +1,8 @@
-from fastapi import FastAPI
 import os
 import psycopg2
+from fastapi import FastAPI
+from pydantic import BaseModel
+from typing import List
 
 app = FastAPI()
 
@@ -82,3 +84,18 @@ def data_status():
         }
     except Exception as e:
         return {"status": "error", "detail": str(e)}
+
+
+# 카테고리 여행지 추천
+from services.rag import category_rag 
+class RecommendRequest(BaseModel):
+    departure: str
+    purpose: str
+    transportation: str
+    companion: List[str]
+    duration: int
+
+@app.post("/recommend")
+def recommend(req: RecommendRequest):
+    results = category_rag(req)
+    return {"results": results}
