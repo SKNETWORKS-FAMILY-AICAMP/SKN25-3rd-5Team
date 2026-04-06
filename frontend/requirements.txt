@@ -1,4 +1,5 @@
 streamlit
-requests
-openai
-dotenv
+requests         
+python-dotenv    
+pandas         
+numpy

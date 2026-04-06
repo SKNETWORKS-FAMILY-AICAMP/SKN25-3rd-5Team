@@ -1,4 +1,5 @@
 import streamlit as st
+import requests  # 백엔드 호출을 위해 추가
 
 def render():
     # 3. 메인 화면 구성
@@ -13,7 +14,7 @@ def render():
     with col2:
         destination = st.text_input("목적지", placeholder="목적지를 입력하세요")
 
-    # 2행: 여행 유형 / 이동 수단 / 출발 시간 슬라이더 — 균등 3열
+    # 2행: 여행 유형 / 이동 수단 / 출발 시간 슬라이더
     col3, col4, col5 = st.columns([1, 1, 2])
 
     with col3:
@@ -46,7 +47,7 @@ def render():
         disp_h = 12 if disp_h == 0 else disp_h
         st.caption(f"✔ {period} {disp_h}시 ({departure_hour:02d}:00)")
 
-    # 일정 생성 버튼 — 중앙
+    # 일정 생성 버튼
     st.write("")
     _, center, _ = st.columns([2, 1, 2])
     with center:
@@ -57,40 +58,49 @@ def render():
         if not (departure and destination and travel_type and transportation):
             st.error("모든 조건을 설정해야 일정이 생성됩니다.")
         else:
-            st.markdown("---")
-            st.markdown('<p class="result-header">📍나의 맞춤 여행 플랜</p>', unsafe_allow_html=True)
-            st.markdown(f"**[ {departure} ]** 에서 **[ {destination} ]** (으)로 떠나는 일정을 확인하세요.")
-            st.write("")
-
-            res_col1, res_col2, res_col3 = st.columns(3)
-            with res_col1:
-                st.markdown(f"""
-                    <div class="custom-result-box">
-                        <span class="result-label">이동 수단</span>
-                        {transportation} 이용
-                    </div>
-                """, unsafe_allow_html=True)
-            with res_col2:
-                st.markdown(f"""
-                    <div class="custom-result-box">
-                        <span class="result-label">출발 시간</span>
-                        {period} {disp_h}시 ({departure_hour:02d}:00) 출발
-                    </div>
-                """, unsafe_allow_html=True)
-            with res_col3:
-                st.markdown(f"""
-                    <div class="custom-result-box">
-                        <span class="result-label">선택 테마</span>
-                        {travel_type} 중심 일정
-                    </div>
-                """, unsafe_allow_html=True)
-
-            st.text_area(
-                label="📍상세 일정",
-                value=(
-                    "1일차: 출발지 이동 및 숙소 체크인 -> 주변 탐방 및 첫 식사\n\n"
-                    "2일차: 메인 테마 일정 수행 -> 지역 맛집 투어 -> 자유 시간\n\n"
-                    "3일차: 조식 후 체크아웃 -> 기념품 쇼핑 및 복귀"
-                ),
-                height=200
+            # --- 백엔드 연결 로직 시작 ---
+            # llm.py의 프롬프트가 잘 분석할 수 있도록 질문 문장을 구성합니다.
+            plan_question = (
+                f"출발지: {departure}, 목적지: {destination}, "
+                f"테마: {travel_type}, 이동수단: {transportation}, "
+                f"출발시간: {departure_hour}시"
             )
+
+            with st.spinner("데이터 기반 최적의 경로를 설계 중입니다..."):
+                try:
+                    # 백엔드 호출 (page_type을 'plan'으로 전송)
+                    response = requests.post(
+                        "http://backend:8000/ask",
+                        json={
+                            "page_type": "plan", 
+                            "question": plan_question
+                        },
+                        timeout=120  # 일정 생성은 시간이 좀 걸릴 수 있으므로 타임아웃 넉넉히 설정
+                    )
+
+                    if response.status_code == 200:
+                        ai_plan = response.json().get("answer", "일정을 생성할 수 없습니다.")
+                        
+                        st.markdown("---")
+                        st.markdown('<p class="result-header">📍나의 맞춤 여행 플랜</p>', unsafe_allow_html=True)
+                        st.markdown(f"**[ {departure} ]** 에서 **[ {destination} ]** (으)로 떠나는 일정을 확인하세요.")
+                        st.write("")
+
+                        # 상단 요약 박스 (기존 디자인 유지)
+                        res_col1, res_col2, res_col3 = st.columns(3)
+                        with res_col1:
+                            st.markdown(f'<div class="custom-result-box"><span class="result-label">이동 수단</span>{transportation} 이용</div>', unsafe_allow_html=True)
+                        with res_col2:
+                            st.markdown(f'<div class="custom-result-box"><span class="result-label">출발 시간</span>{period} {disp_h}시 출발</div>', unsafe_allow_html=True)
+                        with res_col3:
+                            st.markdown(f'<div class="custom-result-box"><span class="result-label">선택 테마</span>{travel_type} 중심 일정</div>', unsafe_allow_html=True)
+
+                        # AI가 생성한 상세 일정 출력
+                        st.info("📍 **상세 일정 타임라인**")
+                        st.markdown(ai_plan) # 텍스트 영역보다 마크다운이 읽기 편해서 변경했습니다.
+
+                    else:
+                        st.error("백엔드 서버에서 일정을 가져오지 못했습니다.")
+                
+                except Exception as e:
+                    st.error(f"연결 에러: {str(e)}")
