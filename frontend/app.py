@@ -1,32 +1,19 @@
-# import streamlit as st
-# import requests
-
-# st.title("Mini Project 3")
-# st.write("Streamlit Frontend + FastAPI Backend + PostgreSQL")
-
-# if st.button("백엔드 확인"):
-#     try:
-#         res = requests.get("http://backend:8000/")
-#         st.json(res.json())
-#     except Exception as e:
-#         st.error(f"백엔드 연결 실패: {e}")
-
-# if st.button("DB 확인"):
-#     try:
-#         res = requests.get("http://backend:8000/db-check")
-#         st.json(res.json())
-#     except Exception as e:
-#         st.error(f"DB 확인 실패: {e}")
-
 import streamlit as st
+import sys
+import os
 
+# 현재 파일 기준 경로
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+
+# frontend 폴더를 import 경로에 추가
+sys.path.append(BASE_DIR)
 
 class App:
     def __init__(self):
         st.set_page_config(page_title="Tripick", layout="wide")
 
         # CSS 
-        with open("style.css") as f:
+        with open(os.path.join(BASE_DIR, "style.css")) as f:
             st.markdown(f"<style>{f.read()}</style>", unsafe_allow_html=True)
 
         # 상태
@@ -40,11 +27,11 @@ class App:
         col1, col2, col3, col4, col5= st.columns([2,1,1,1,1])
 
         with col1:
-            st.image("assets/logo.png", width=250)
+            st.image(os.path.join(BASE_DIR, "assets/logo.png"), width=250)
 
         with col2:
             if st.button("여행 찾기"):
-                self.go("home")
+                self.go("category")
 
         with col3:
             if st.button("여행 챗봇"):
@@ -65,17 +52,20 @@ class App:
         page = st.session_state.page
 
         if page == "about":
-            import views.about as about
+            from views import about
             about.render()
 
-        elif page == "home":
-            st.write("여행 찾기")
+        elif page == "category":
+            from views import category
+            category.render()
 
         elif page == "chat":
-            st.write("챗봇")
+            from views import chat
+            chat.render()
 
         elif page == "plan":
-            st.write("일정")
+            from views import plan
+            plan.render()
 
 
 if __name__ == "__main__":
