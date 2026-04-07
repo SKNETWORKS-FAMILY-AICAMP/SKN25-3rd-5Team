@@ -17,7 +17,7 @@ def retrieve_category(req):
 
     # embedding용 문장
     query_text = f"""
-        {req.departure}에서 출발하는
+        {req.destination}에서 출발하는
         {req.purpose} 여행
         {req.companion}와 함께하는 여행
         {req.transportation} 이용
@@ -43,7 +43,7 @@ def retrieve_category(req):
         AND sido_nm = %s
         ORDER BY embedding <-> %s::vector
         LIMIT 20
-    """, (query_embedding, req.purpose, req.departure, query_embedding))
+    """, (query_embedding, req.purpose, req.destination, query_embedding))
 
     places = cur.fetchall()
 
@@ -57,7 +57,7 @@ def retrieve_category(req):
         FROM user_behavior_vectors
         WHERE trip_visit_sido = %s
         LIMIT 20
-    """, (req.departure,))
+    """, (req.destination,))
 
     behavior = cur.fetchall()
 
@@ -85,4 +85,47 @@ def retrieve_category(req):
     return {
         "places": place_results,
         "behavior_text": behavior_text
+    }
+
+
+
+def retrieve_plan(req):
+
+    conn = get_connection()
+    cur = conn.cursor()
+
+    # 행동패턴 
+    cur.execute("""
+        SELECT 
+            trip_visit_sido,
+            trip_visit_sigungu,
+            travel_activity,
+            trip_transport_incity
+        FROM user_behavior_vectors
+        WHERE trip_visit_sido = %s
+        LIMIT 5
+    """, (req.destination,))
+
+    behavior = cur.fetchall()
+
+    #  여행지 후보 
+    cur.execute("""
+        SELECT 
+            title,
+            sido_nm,
+            sgg_nm,
+            content_type_nm
+        FROM travel_place_vectors
+        WHERE sido_nm = %s
+        LIMIT 10
+    """, (req.destination,))
+
+    places = cur.fetchall()
+
+    cur.close()
+    conn.close()
+
+    return {
+        "behavior": behavior,
+        "places": places
     }

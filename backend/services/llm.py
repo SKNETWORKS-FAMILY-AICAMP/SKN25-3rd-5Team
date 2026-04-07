@@ -37,7 +37,7 @@ def generate_category_response(req, docs, behavior_text):
     너는 여행 추천 시스템이다.
 
     사용자 조건:
-    - 출발지: {req.departure}
+    - 목적지: {req.destination}
     - 이동 수단: {req.transportation}
     - 동행자: {req.companion}
 
@@ -68,6 +68,64 @@ def generate_category_response(req, docs, behavior_text):
     return response.content
 
 
+
+
+def generate_plan_with_rag(req, data):
+
+    behavior = data["behavior"]
+    places = data["places"]
+
+    # 행동 패턴 텍스트
+    behavior_text = "\n".join([
+        f"{b[2]} / 이동: {b[3]}"
+        for b in behavior
+    ])
+
+    # 여행지 후보
+    place_text = "\n".join([
+        f"- {p[0]} ({p[1]} {p[2]}) [{p[3]}]"
+        for p in places
+    ])
+
+    prompt = f"""
+너는 여행 일정 플래너다.
+
+조건:
+- 출발지: {req.departure}
+- 목적지: {req.destination}
+- 이동 수단: {req.transportation}
+
+사용자 행동 패턴:
+{behavior_text}
+
+추천 여행지:
+{place_text}
+
+규칙:
+- JSON 형식으로 출력하지 마라
+- "활동:" 같은 형식 사용하지 마라
+- 자연스러운 여행 일정 문장으로 작성
+- 사람이 여행 계획 짜듯이 작성
+
+출력 형식:
+
+1일차
+09:00 관덕정에서 산책하며 여행 시작
+12:30 메타포에서 점심 식사
+15:00 부용정에서 여유로운 휴식
+18:00 사직단에서 저녁 산책
+
+2일차
+...
+
+
+"""
+
+    res = llm.invoke([HumanMessage(content=prompt)])
+    return res.content
+
+
+
 # LLM 응답 변환 
 def parse_category_json(text):
     try:
@@ -75,3 +133,4 @@ def parse_category_json(text):
         return json.loads(text)
     except:
         return []
+    
