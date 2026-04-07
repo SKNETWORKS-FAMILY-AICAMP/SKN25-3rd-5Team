@@ -129,3 +129,119 @@ def retrieve_plan(req):
         "behavior": behavior,
         "places": places
     }
+  
+  
+  # 채팅 검색
+def retrieve_chat(message, history=None, limit=5):
+    resolved_query = build_chat_query(message, history)
+    selected_place = extract_selected_place(message, history)
+    meta_chat = is_meta_chat(message)
+
+    conn = get_connection()
+    cur = conn.cursor()
+
+    places = []
+    behavior_text = ""
+
+    if not (meta_chat and selected_place is None):
+        query_embedding = get_embedding(resolved_query)
+
+        if selected_place:
+            # 기준 여행지 중심 검색
+            focused_query = (
+                f"{selected_place['title']} {selected_place['sido_nm']} "
+                f"{selected_place['sgg_nm']} {resolved_query}"
+            )
+            focused_embedding = get_embedding(focused_query)
+
+            cur.execute("""
+                SELECT 
+                    title,
+                    sido_nm,
+                    content_type_nm,
+                    sgg_nm,
+                    source,
+                    embedding <-> %s::vector AS distance
+                FROM travel_place_vectors
+                WHERE sido_nm = %s AND sgg_nm = %s
+                ORDER BY embedding <-> %s::vector
+                LIMIT %s
+            """, (
+                focused_embedding,
+                selected_place["sido_nm"],
+                selected_place["sgg_nm"],
+                focused_embedding,
+                max(limit, 5),
+            ))
+            rows = cur.fetchall()
+
+            places.append(selected_place)
+            for row in rows:
+                item = {
+                    "title": row[0],
+                    "sido_nm": row[1],
+                    "content_type_nm": row[2],
+                    "sgg_nm": row[3],
+                    "source": row[4],
+                }
+                if item["title"] != selected_place["title"]:
+                    places.append(item)
+                if len(places) >= limit:
+                    break
+        else:
+            # 일반 후보 검색
+            cur.execute("""
+                SELECT 
+                    title,
+                    sido_nm,
+                    content_type_nm,
+                    sgg_nm,
+                    source,
+                    embedding <-> %s::vector AS distance
+                FROM travel_place_vectors
+                ORDER BY embedding <-> %s::vector
+                LIMIT %s
+            """, (query_embedding, query_embedding, max(limit * 4, 20)))
+
+            rows = cur.fetchall()
+            places = [
+                {
+                    "title": row[0],
+                    "sido_nm": row[1],
+                    "content_type_nm": row[2],
+                    "sgg_nm": row[3],
+                    "source": row[4],
+                }
+                for row in rows[:limit]
+            ]
+
+        places = rerank_chat_places(places, message)
+
+        cur.execute("""
+            SELECT 
+                trip_visit_sido,
+                trip_visit_sigungu,
+                travel_activity,
+                companion_type
+            FROM user_behavior_vectors
+            ORDER BY embedding <-> %s::vector
+            LIMIT 5
+        """, (query_embedding,))
+
+        behavior = cur.fetchall()
+        behavior_text = "\n".join([
+            f"{row[0]} {row[1]}에서 {row[2]} 활동, 동행자: {row[3]}"
+            for row in behavior
+        ])
+
+    cur.close()
+    conn.close()
+
+    return {
+        "resolved_query": resolved_query,
+        "selected_place": selected_place,
+        "show_places": bool(places) and not meta_chat,
+        "places": places,
+        "behavior_text": behavior_text,
+        "meta_chat": meta_chat,
+    }

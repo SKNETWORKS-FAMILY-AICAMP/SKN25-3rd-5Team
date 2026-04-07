@@ -1,5 +1,6 @@
 from services.retriever import retrieve_category
-from services.llm import generate_category_response, parse_category_json
+from services.retriever import retrieve_chat
+from services.llm import generate_category_response, parse_category_json, generate_chat_response
 
 # 카테고리 여행지 추천 
 def category_rag(req):
@@ -36,6 +37,28 @@ def category_rag(req):
     }
 
 
+# 채팅 RAG
+def chat_rag(message, history=None, limit=5):
+    result = retrieve_chat(message=message, history=history, limit=limit)
+
+    places = result["places"]
+    behavior_text = result["behavior_text"]
+
+    answer = generate_chat_response(
+        message=message,
+        docs=places,
+        behavior_text=behavior_text,
+        history=history or [],
+        selected_place=result["selected_place"],
+        meta_chat=result["meta_chat"],
+    )
+
+    return {
+        "answer": answer,
+        "places": places,
+        "show_places": result["show_places"],
+        "resolved_query": result["resolved_query"],
+    }
 
 from services.retriever import retrieve_plan
 from services.llm import generate_plan_with_rag

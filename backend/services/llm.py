@@ -133,4 +133,51 @@ def parse_category_json(text):
         return json.loads(text)
     except:
         return []
+
+
+# 채팅 응답 생성
+def generate_chat_response(message, docs, behavior_text="", history=None, selected_place=None, meta_chat=False):
+    history = history or []
+    history_text = "\n".join([
+        f"{item.get('role', 'user')}: {item.get('content', '')}"
+        for item in history[-6:]
+    ])
+
+    context = "\n".join([
+        f"- {d['title']} ({d['sido_nm']} {d['sgg_nm']}) / {d['content_type_nm']}"
+        for d in docs
+    ])
+
+    prompt = f"""
+    너는 자연스럽게 대화하는 여행 챗봇이다.
+
+    사용자 현재 질문:
+    {message}
+
+    이전 대화:
+    {history_text}
+
+    선택된 기준 여행지:
+    {selected_place if selected_place else "없음"}
+
+    검색된 여행지 후보:
+    {context if context else "없음"}
+
+    유사 행동 패턴:
+    {behavior_text if behavior_text else "없음"}
+
+    규칙:
+    - 사용자가 기억 여부나 이전 대화를 물으면 짧고 자연스럽게 답해.
+    - 다만 검색된 여행지 후보가 있고 사용자가 추천, 일정, 코스, 여행지 선택을 원하면 기억보다 추천을 우선해.
+    - 추천이 꼭 필요할 때만 추천을 제안해.
+    - 선택된 기준 여행지가 있으면 그 장소를 중심으로 답해.
+    - 검색 결과에 없는 정보는 지어내지 마.
+    - 말투는 친근하고 자연스럽게.
+    """
+
+    if meta_chat:
+        prompt += "\n- 이번 답변은 여행지 리스트를 억지로 만들지 말고 1~3문장으로 자연스럽게 답해."
+
+    response = llm.invoke([HumanMessage(content=prompt)])
+    return response.content
     
