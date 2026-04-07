@@ -87,7 +87,7 @@ def data_status():
 
 
 # 카테고리 여행지 추천
-from services.rag import category_rag 
+from services.rag import category_rag, chat_rag 
 class RecommendRequest(BaseModel):
     departure: str
     purpose: str
@@ -95,7 +95,23 @@ class RecommendRequest(BaseModel):
     companion: List[str]
     duration: int
 
+
+class ChatRequest(BaseModel):
+    message: str
+    history: List[dict] = []
+    limit: int = 5
+
 @app.post("/recommend")
 def recommend(req: RecommendRequest):
     results = category_rag(req)
     return {"results": results}
+
+
+@app.post("/chat")
+def chat(req: ChatRequest):
+    result = chat_rag(
+        message=req.message,
+        history=req.history,
+        limit=req.limit,
+    )
+    return result
