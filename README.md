@@ -165,21 +165,37 @@ SKN25-3rd-5Team/
 ---
 
 # 8. 기술 스택 (Tech Stack)
-### 🖥 Frontend
-![Streamlit](https://img.shields.io/badge/Streamlit-FF4B4B?style=for-the-badge&logo=streamlit&logoColor=white)
-![CSS](https://img.shields.io/badge/css-%23663399.svg?style=for-the-badge&logo=css&logoColor=white)
+### 🏗 Infrastructure
+![Docker](https://img.shields.io/badge/Docker-2496ED?style=for-the-badge&logo=docker&logoColor=white)
+![Docker Compose](https://img.shields.io/badge/Docker_Compose-2496ED?style=for-the-badge&logo=docker&logoColor=white)
 
+
+### 🖥 Frontend
+![Streamlit](https://img.shields.io/badge/Streamlit-1.56.0-FF4B4B?style=for-the-badge&logo=streamlit&logoColor=white)
+![Requests](https://img.shields.io/badge/Requests-2.33.1-2D6DBF?style=for-the-badge)
+![OpenAI](https://img.shields.io/badge/OpenAI-2.30.0-412991?style=for-the-badge&logo=openai&logoColor=white)
+![Python Dotenv](https://img.shields.io/badge/python--dotenv-1.2.2-ECD53F?style=for-the-badge)
 
 ### ⚙️ Backend
-![Python](https://img.shields.io/badge/Python-3776AB?style=for-the-badge&logo=python&logoColor=white)
-![FastAPI](https://img.shields.io/badge/FastAPI-005571?style=for-the-badge&logo=fastapi)
-![Pandas](https://img.shields.io/badge/pandas-%23150458.svg?style=for-the-badge&logo=pandas&logoColor=white)
-![LangChain](https://img.shields.io/badge/langchain-%231C3C3C.svg?style=for-the-badge&logo=langchain&logoColor=white)
 ![ChatGPT](https://img.shields.io/badge/chatGPT-74aa9c?style=for-the-badge&logo=openai&logoColor=white)
+![FastAPI](https://img.shields.io/badge/FastAPI-0.135.3-009688?style=for-the-badge&logo=fastapi&logoColor=white)
+![Uvicorn](https://img.shields.io/badge/Uvicorn-0.43.0-4051B5?style=for-the-badge)
+![Pandas](https://img.shields.io/badge/Pandas-3.0.2-150458?style=for-the-badge&logo=pandas&logoColor=white)
+![OpenAI](https://img.shields.io/badge/OpenAI-2.30.0-412991?style=for-the-badge&logo=openai&logoColor=white)
+![Python](https://img.shields.io/badge/Python-3776AB?style=for-the-badge&logo=python&logoColor=white)
 ![Pydantic](https://img.shields.io/badge/Pydantic-E92063?style=for-the-badge&logo=pydantic&logoColor=white)
-![Uvicorn](https://img.shields.io/badge/Uvicorn-499848?style=for-the-badge&logo=gunicorn&logoColor=white)
- 
+![Python Dotenv](https://img.shields.io/badge/python--dotenv-1.2.2-ECD53F?style=for-the-badge)
+![psycopg2](https://img.shields.io/badge/psycopg2--binary-2.9.11-336791?style=for-the-badge&logo=postgresql&logoColor=white)
+![LangChain](https://img.shields.io/badge/LangChain-1.2.15-1C3C3C?style=for-the-badge)
+![LangChain OpenAI](https://img.shields.io/badge/LangChain--OpenAI-1.1.12-0B3D2E?style=for-the-badge)
 
 
 ### 🗄 Database
 ![Postgres](https://img.shields.io/badge/postgres-%23316192.svg?style=for-the-badge&logo=postgresql&logoColor=white)
+![pgvector](https://img.shields.io/badge/pgvector-4169E1?style=for-the-badge&logo=postgresql&logoColor=white)
+
+### 🤝 Collaboration
+![Discord](https://img.shields.io/badge/Discord-5865F2?style=for-the-badge&logo=discord&logoColor=white)
+![Git](https://img.shields.io/badge/Git-F05032?style=for-the-badge&logo=git&logoColor=white)
+![GitHub](https://img.shields.io/badge/GitHub-181717?style=for-the-badge&logo=github&logoColor=white)
+![Notion](https://img.shields.io/badge/Notion-000000?style=for-the-badge&logo=notion&logoColor=white)
