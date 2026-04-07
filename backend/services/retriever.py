@@ -17,7 +17,7 @@ def retrieve_category(req):
 
     # embedding용 문장
     query_text = f"""
-        {req.departure}에서 출발하는
+        {req.destination}에서 출발하는
         {req.purpose} 여행
         {req.companion}와 함께하는 여행
         {req.transportation} 이용
@@ -43,7 +43,7 @@ def retrieve_category(req):
         AND sido_nm = %s
         ORDER BY embedding <-> %s::vector
         LIMIT 20
-    """, (query_embedding, req.purpose, req.departure, query_embedding))
+    """, (query_embedding, req.purpose, req.destination, query_embedding))
 
     places = cur.fetchall()
 
@@ -57,7 +57,7 @@ def retrieve_category(req):
         FROM user_behavior_vectors
         WHERE trip_visit_sido = %s
         LIMIT 20
-    """, (req.departure,))
+    """, (req.destination,))
 
     behavior = cur.fetchall()
 
@@ -88,156 +88,50 @@ def retrieve_category(req):
     }
 
 
-# 메타 질문 판별
-def is_meta_chat(message):
-    memory_markers = [
-        "기억해",
-        "기억나",
-        "기억하지",
-        "내가 했던 말",
-        "아까 뭐",
-        "뭐였지",
-    ]
-    recommendation_markers = [
-        "추천",
-        "여행지",
-        "코스",
-        "일정",
-        "계획",
-        "짜",
-        "골라",
-        "알려줘",
-        "가고",
-        "갈만한",
-    ]
 
-    if any(marker in message for marker in recommendation_markers):
-        return False
+def retrieve_plan(req):
 
-    return any(marker in message for marker in memory_markers)
+    conn = get_connection()
+    cur = conn.cursor()
 
+    # 행동패턴 
+    cur.execute("""
+        SELECT 
+            trip_visit_sido,
+            trip_visit_sigungu,
+            travel_activity,
+            trip_transport_incity
+        FROM user_behavior_vectors
+        WHERE trip_visit_sido = %s
+        LIMIT 5
+    """, (req.destination,))
 
-# 순번 여행지 추출
-def extract_selected_place(message, history=None):
-    history = history or []
-    order_map = {
-        0: ["1번째", "1번", "첫번째", "첫 번째", "첫째"],
-        1: ["2번째", "2번", "두번째", "두 번째", "둘째"],
-        2: ["3번째", "3번", "세번째", "세 번째", "셋째"],
-        3: ["4번째", "4번", "네번째", "네 번째", "넷째"],
-        4: ["5번째", "5번", "다섯번째", "다섯 번째", "다섯째"],
+    behavior = cur.fetchall()
+
+    #  여행지 후보 
+    cur.execute("""
+        SELECT 
+            title,
+            sido_nm,
+            sgg_nm,
+            content_type_nm
+        FROM travel_place_vectors
+        WHERE sido_nm = %s
+        LIMIT 10
+    """, (req.destination,))
+
+    places = cur.fetchall()
+
+    cur.close()
+    conn.close()
+
+    return {
+        "behavior": behavior,
+        "places": places
     }
-
-    selected_index = None
-    for index, patterns in order_map.items():
-        if any(pattern in message for pattern in patterns):
-            selected_index = index
-            break
-
-    if selected_index is None:
-        return None
-
-    for item in reversed(history):
-        places = item.get("places") or []
-        if places and len(places) > selected_index:
-            return places[selected_index]
-    return None
-
-
-# 채팅 질의 확장
-def build_chat_query(message, history=None):
-    history = history or []
-    follow_up_markers = [
-        "그중",
-        "그중에서",
-        "거기",
-        "거기서",
-        "그거",
-        "그곳",
-        "그 코스",
-        "그 일정",
-        "다시",
-        "그럼",
-        "그러면",
-        "이번엔",
-    ]
-    is_follow_up = any(marker in message for marker in follow_up_markers)
-    is_short_message = len(message.strip()) <= 24
-
-    recent_user_messages = []
-    for item in reversed(history):
-        if item.get("role") == "user":
-            content = (item.get("content") or "").strip()
-            if content:
-                recent_user_messages.append(content)
-        if len(recent_user_messages) >= 2:
-            break
-
-    if not recent_user_messages:
-        return message
-
-    if not is_follow_up and not is_short_message:
-        last_user_message = recent_user_messages[0]
-        if last_user_message == message:
-            return message
-        return " / ".join([last_user_message, message])
-
-    recent_user_messages.reverse()
-    merged = []
-    for content in recent_user_messages + [message]:
-        if content and (not merged or merged[-1] != content):
-            merged.append(content)
-    return " / ".join(merged)
-
-
-# 카테고리 추출
-def extract_category_keywords(message):
-    category_map = {
-        "레포츠": ["레포츠", "액티비티", "스포츠", "체험"],
-        "숙박": ["숙박", "호텔", "리조트", "펜션", "모텔"],
-        "쇼핑": ["쇼핑", "시장", "백화점", "아울렛", "마트"],
-        "문화시설": ["문화", "전시", "박물관", "미술관", "공연"],
-        "축제/공연/행사": ["축제", "공연", "행사", "페스티벌"],
-        "음식점": ["맛집", "음식", "식당", "카페", "먹거리"],
-        "관광지": ["관광지", "명소", "구경", "여행지"],
-    }
-
-    matched = []
-    for category, keywords in category_map.items():
-        if any(keyword in message for keyword in keywords):
-            matched.append(category)
-    return matched
-
-
-# 카테고리 가중치
-def rerank_chat_places(places, message):
-    preferred_categories = extract_category_keywords(message)
-    if not preferred_categories:
-        return places
-
-    ranked = []
-    for index, item in enumerate(places):
-        score = 0
-        content_type = item.get("content_type_nm", "")
-        title = item.get("title", "")
-
-        if content_type in preferred_categories:
-            score += 3
-
-        if "레포츠" in preferred_categories and any(keyword in title for keyword in ["파크", "스키", "서핑", "캠핑", "수상", "체험"]):
-            score += 1
-        if "쇼핑" in preferred_categories and any(keyword in title for keyword in ["시장", "몰", "마트", "백화점", "아울렛"]):
-            score += 1
-        if "숙박" in preferred_categories and any(keyword in title for keyword in ["호텔", "리조트", "펜션", "모텔", "스테이"]):
-            score += 1
-
-        ranked.append((score, -index, item))
-
-    ranked.sort(reverse=True)
-    return [item for _, _, item in ranked]
-
-
-# 채팅 검색
+  
+  
+  # 채팅 검색
 def retrieve_chat(message, history=None, limit=5):
     resolved_query = build_chat_query(message, history)
     selected_place = extract_selected_place(message, history)

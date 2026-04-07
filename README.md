@@ -1,8 +1,10 @@
 # SKN25-3rd-5Team
 
-# ✈️ Tripick : 당신의 여행지를 추천해드립니다
+  <img src="./frontend/assets/logo.png" width="100%" alt="Tripick Logo">
 
-> **데이터 기반의 개인 맞춤형 여행지 큐레이션 서비스** > 일반 관광지 정보부터 반려동물 동반, 무장애 시설 데이터까지 통합하여 모든 사용자를 위한 최적의 여행 경험을 설계합니다.
+  # ✈️ Tripick : 당신의 여행지를 추천해드립니다
+
+ < **데이터 기반의 개인 맞춤형 여행지 큐레이션 서비스** > 일반 관광지 정보부터 반려동물 동반, 무장애 시설 데이터까지 통합하여 모든 사용자를 위한 최적의 여행 경험을 설계합니다.
 
 ---
 
@@ -10,10 +12,10 @@
 
 <table>
   <tr>
-    <td align="center"><img src="https://github.com/acegikmoop-code.png" width="100px;" alt="박성진"/></td>
-    <td align="center"><img src="https://github.com/Sangmin630.png" width="100px;" alt="이상민"/></td>
-    <td align="center"><img src="https://github.com/chaechae18.png" width="100px;" alt="이채림"/></td>
-    <td align="center"><img src="https://github.com/pureunsaerok-ship-it.png" width="100px;" alt="임하영"/></td>
+    <td align="center"><img src="https://i.namu.wiki/i/ev9CIrDI9_G44r6YlQ5NkJqwRec7k4Xl6EyhY_iDNRU7T40gJa6NxyUzfYCzNlOiSf5LoXPgILc64SMAGvRTNw.webp" width="100px;" alt="박성진"/></td>
+    <td align="center"><img src="https://i.namu.wiki/i/wm9ayfxu32DXRT9rqj6HO_sMUcowfUcb2mMN00lgJ-00GATqe9m1N4NK4F7Y1jX_qoXI4NMlyv3lE6vSEzl4eQ.webp" width="100px;" alt="이상민"/></td>
+    <td align="center"><img src="https://i.namu.wiki/i/YUIaJS34kTVBsx6qKlC8sITt64A0dgRmQRL2DfxSHhrZ5Zkje6zsA3LgqjYbtBy3Ik4Ta_ys2x08zMzxdzHhqQ.webp" width="100px;" alt="이채림"/></td>
+    <td align="center"><img src="https://media.discordapp.net/attachments/1490663056676618343/1490887724604067871/30594e2c97ecb60bae6b25b7c7c3f557.png?ex=69d5b0e4&is=69d45f64&hm=d1baa77a6f98a9cd425768d3af7456b01d80d9d8cc24d75985829a3bf018c294&=&format=webp&quality=lossless&width=810&height=810" width="100px;" alt="임하영"/></td>
   </tr>
   <tr>
     <th align="center">박성진</th>
@@ -54,7 +56,7 @@
 
 본 프로젝트는 **한국관광공사(TourAPI)**와 **공공데이터포털**에서 제공하는 신뢰도 높은 데이터를 기반으로 구축되었습니다.
 
-| 데이터셋 파일명 | 데이터 출처 | 주요 내용 |
+| 데이터 출처 | 주요 내용 |
 | :--- | :--- |
 | [한국문화관광연구원] 국민여행조사 통계 원자료 | 실질적인 여행 행태(이동수단, 동행인, 소비패턴 등) |
 | [한국관광공사] 기초지자체 중심 관광지 정보 | 전국 관광지 명칭, 주소, 위경도 좌표(POI) 정보 |

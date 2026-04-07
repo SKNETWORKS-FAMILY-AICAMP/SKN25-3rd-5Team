@@ -1,8 +1,8 @@
-fastapi
-uvicorn[standard]
-pandas
-openai
-python-dotenv
-psycopg2-binary
-langchain
-langchain-openai
+fastapi==0.135.3
+uvicorn[standard]==0.43.0
+pandas==3.0.2
+openai==2.30.0
+python-dotenv==1.2.2
+psycopg2-binary==2.9.11
+langchain==1.2.15
+langchain-openai==1.1.12
