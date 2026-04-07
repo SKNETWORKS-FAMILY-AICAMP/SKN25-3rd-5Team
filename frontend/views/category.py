@@ -10,7 +10,7 @@ def render():
     col1, col2 = st.columns(2)
 
     with col1:
-        departure = st.selectbox("출발지 선택", [
+        destination = st.selectbox("목적지 선택", [
             "서울특별시",
             "부산광역시",
             "대구광역시",
@@ -91,7 +91,7 @@ def render():
     if search:
 
         payload = {
-            "departure": departure,
+            "destination": destination,
             "purpose": purpose,
             "transportation": transportation,
             "companion": companion,

@@ -89,7 +89,7 @@ def data_status():
 # 카테고리 여행지 추천
 from services.rag import category_rag 
 class RecommendRequest(BaseModel):
-    departure: str
+    destination: str
     purpose: str
     transportation: str
     companion: List[str]
@@ -99,3 +99,20 @@ class RecommendRequest(BaseModel):
 def recommend(req: RecommendRequest):
     results = category_rag(req)
     return {"results": results}
+
+
+# 일정 생성
+from services.rag import plan_rag 
+class PlanRequest(BaseModel):
+    departure: str
+    destination: str
+    travel_type: str
+    transportation: str
+    departure_time: int
+
+
+
+@app.post("/plan")
+def plan(req: PlanRequest):
+    result = plan_rag(req)   
+    return {"result": result}

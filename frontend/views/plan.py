@@ -1,4 +1,5 @@
 import streamlit as st
+import requests
 
 def render():
     # 3. 메인 화면 구성
@@ -9,28 +10,89 @@ def render():
     # 1행: 출발지 / 목적지
     col1, col2 = st.columns(2)
     with col1:
-        departure = st.text_input("출발지", placeholder="출발지를 입력하세요")
+        departure = st.selectbox("출발지 선택", [
+            "서울특별시",
+            "부산광역시",
+            "대구광역시",
+            "인천광역시",
+            "광주광역시",
+            "대전광역시",
+            "울산광역시",
+            "세종특별자치시",
+            "경기도",
+            "강원특별자치도",
+            "충청북도",
+            "충청남도",
+            "전북특별자치도",
+            "전라남도",
+            "경상북도",
+            "경상남도",
+            "제주특별자치도"
+        ])
     with col2:
-        destination = st.text_input("목적지", placeholder="목적지를 입력하세요")
+        destination = st.selectbox("도착지 선택", [
+            "서울특별시",
+            "부산광역시",
+            "대구광역시",
+            "인천광역시",
+            "광주광역시",
+            "대전광역시",
+            "울산광역시",
+            "세종특별자치시",
+            "경기도",
+            "강원특별자치도",
+            "충청북도",
+            "충청남도",
+            "전북특별자치도",
+            "전라남도",
+            "경상북도",
+            "경상남도",
+            "제주특별자치도"
+        ])
 
     # 2행: 여행 유형 / 이동 수단 / 출발 시간 슬라이더 — 균등 3열
     col3, col4, col5 = st.columns([1, 1, 2])
 
     with col3:
-        travel_type = st.selectbox(
-            "여행 유형",
-            ["휴양", "액티비티", "맛집 탐방", "문화유산 관람", "쇼핑"],
-            index=None,
-            placeholder="유형을 선택하세요"
-        )
+        travel_type = st.selectbox("여행 유형", [
+        "가족/친지 방문",
+        "교육/체험 프로그램",
+        "교육/훈련/연수",
+        "드라마 촬영지 방문",
+        "문화예술/전시 관람",
+        "스포츠 경기관람",
+        "시티투어",
+        "야외 스포츠/레포츠",
+        "역사 유적지 방문",
+        "온천/스파",
+        "유흥/오락",
+        "자연 및 풍경감상",
+        "종교/성지순례",
+        "지역 축제/이벤트",
+        "카지노/경마 등",
+        "테마파크/동식물원",
+        "회의참가/시찰",
+        "휴식/휴양",
+        "쇼핑",
+        "음식관광",
+        "기타"
+    ])
 
     with col4:
-        transportation = st.selectbox(
-            "이동 수단",
-            ["항공", "철도", "버스", "자가용", "도보"],
-            index=None,
-            placeholder="수단을 선택하세요"
-        )
+        transportation = st.selectbox("이동 수단", [
+            "차량대여/렌트",
+            "선박/해상 교통",
+            "[정기] 고속/시외/시내버스",
+            "자전거",
+            "철도",
+            "지하철",
+            "도보",
+            "택시",
+            "항공기",
+            "[부정기] 전세/관광버스",
+            "자가용",
+            "기타"
+        ])
 
     with col5:
         departure_hour = st.slider(
@@ -57,40 +119,75 @@ def render():
         if not (departure and destination and travel_type and transportation):
             st.error("모든 조건을 설정해야 일정이 생성됩니다.")
         else:
-            st.markdown("---")
-            st.markdown('<p class="result-header">📍나의 맞춤 여행 플랜</p>', unsafe_allow_html=True)
-            st.markdown(f"**[ {departure} ]** 에서 **[ {destination} ]** (으)로 떠나는 일정을 확인하세요.")
-            st.write("")
 
-            res_col1, res_col2, res_col3 = st.columns(3)
-            with res_col1:
+            payload = {
+                "departure": departure,
+                "destination": destination,
+                "travel_type": travel_type,
+                "transportation": transportation,
+                "departure_time": departure_hour
+            }
+
+            #  로딩 UI
+            with st.spinner("AI가 여행 일정을 생성 중입니다... ✈️"):
+
+                try:
+                    res = requests.post(
+                        "http://backend:8000/plan",
+                        json=payload
+                    )
+
+                    if res.status_code != 200:
+                        st.error("서버 오류가 발생했습니다.")
+                        return
+
+                    data = res.json()
+                    plan_text = data.get("result", "일정 생성 실패")
+
+                except Exception as e:
+                    st.error(f"연결 실패: {e}")
+                    return
+
+            # 결과 UI
+            st.markdown("---")
+            st.markdown('<p class="result-header">📍 나의 맞춤 여행 플랜</p>', unsafe_allow_html=True)
+
+            st.markdown(f"""
+            **[ {departure} ] → [ {destination} ] 여행 일정**
+            """)
+
+            # 요약 카드
+            col1, col2, col3 = st.columns(3)
+
+            with col1:
                 st.markdown(f"""
                     <div class="custom-result-box">
-                        <span class="result-label">이동 수단</span>
-                        {transportation} 이용
+                        <span class="result-label">🚗 이동 수단</span><br>
+                        {transportation}
                     </div>
                 """, unsafe_allow_html=True)
-            with res_col2:
+
+            with col2:
                 st.markdown(f"""
                     <div class="custom-result-box">
-                        <span class="result-label">출발 시간</span>
-                        {period} {disp_h}시 ({departure_hour:02d}:00) 출발
+                        <span class="result-label">🕒 출발 시간</span><br>
+                        {period} {disp_h}시 ({departure_hour:02d}:00)
                     </div>
                 """, unsafe_allow_html=True)
-            with res_col3:
+
+            with col3:
                 st.markdown(f"""
                     <div class="custom-result-box">
-                        <span class="result-label">선택 테마</span>
-                        {travel_type} 중심 일정
+                        <span class="result-label">🎯 여행 유형</span><br>
+                        {travel_type}
                     </div>
                 """, unsafe_allow_html=True)
+
+            # 일정 출력
+            st.markdown("### 🗺 상세 일정")
 
             st.text_area(
-                label="📍상세 일정",
-                value=(
-                    "1일차: 출발지 이동 및 숙소 체크인 -> 주변 탐방 및 첫 식사\n\n"
-                    "2일차: 메인 테마 일정 수행 -> 지역 맛집 투어 -> 자유 시간\n\n"
-                    "3일차: 조식 후 체크아웃 -> 기념품 쇼핑 및 복귀"
-                ),
-                height=200
+                label="",
+                value=plan_text,
+                height=300
             )

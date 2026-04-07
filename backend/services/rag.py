@@ -34,3 +34,16 @@ def category_rag(req):
         "items": final,
         "raw": raw
     }
+
+
+
+from services.retriever import retrieve_plan
+from services.llm import generate_plan_with_rag
+
+def plan_rag(req):
+
+    data = retrieve_plan(req)
+
+    result = generate_plan_with_rag(req, data)
+
+    return result
