@@ -134,10 +134,17 @@ SKN25-3rd-5Team/
 ├──  .gitignore                 # Git 추적 제외 설정 (venv, .env 등)
 └──  README.md                  # 프로젝트 통합 가이드 문서
 
-'''
+```
 ### ERD
 
+--
 
-# 6. 한 줄 회고
+# 6. 페이지 소개
+![Image](https://github.com/user-attachments/assets/b1ecf4cb-0796-4e21-83a7-17b5f2af7904)
+![Image](https://github.com/user-attachments/assets/f7ec0a7c-b422-4e29-bd11-06b22e42450d)
 
-# 7. 기술 스택 (Tech Stack)
+![Image](https://github.com/user-attachments/assets/597a476c-4a32-49d0-b5df-fd844986ec9b)
+
+# 7. 한 줄 회고
+
+# 8. 기술 스택 (Tech Stack)
