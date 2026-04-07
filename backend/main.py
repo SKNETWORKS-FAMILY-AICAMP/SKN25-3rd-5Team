@@ -115,6 +115,8 @@ def chat(req: ChatRequest):
         limit=req.limit,
     )
     return result
+
+
 # 일정 생성
 from services.rag import plan_rag 
 class PlanRequest(BaseModel):
