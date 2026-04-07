@@ -30,10 +30,10 @@
     <td align="center"><a href="https://github.com/pureunsaerok-ship-it">pureunsaerok</a></td>
   </tr>
   <tr>
-    <th align="center"></th>
-    <th align="center"></th>
-    <th align="center"></th>
-    <th align="center"></th>
+    <th align="center">데이터 전처리, 백엔드</th>
+    <th align="center">환경구축, DB, 백엔드</th>
+    <th align="center">프론트엔드, 백엔드</th>
+    <th align="center">데이터 전처리, 프론트엔드</th>
   </tr>
 </table>
 
@@ -90,6 +90,9 @@
 ---
 
 # 5. 프로젝트 설계
+### Architecture
+![Image](https://github.com/user-attachments/assets/f5678536-6d00-482a-bd00-df4db95b3a7e)
+
 ### 프로젝트 구조
 ```
 SKN25-3rd-5Team/
@@ -146,9 +149,34 @@ SKN25-3rd-5Team/
 # 6. 페이지 소개
 ![Image](https://github.com/user-attachments/assets/b1ecf4cb-0796-4e21-83a7-17b5f2af7904)
 ![Image](https://github.com/user-attachments/assets/f7ec0a7c-b422-4e29-bd11-06b22e42450d)
-
+![Image](https://github.com/user-attachments/assets/492f81ba-7ede-4f3b-b77f-744d07257f22)
 ![Image](https://github.com/user-attachments/assets/597a476c-4a32-49d0-b5df-fd844986ec9b)
 
 # 7. 한 줄 회고
+> <img src="https://i.namu.wiki/i/ev9CIrDI9_G44r6YlQ5NkJqwRec7k4Xl6EyhY_iDNRU7T40gJa6NxyUzfYCzNlOiSf5LoXPgILc64SMAGvRTNw.webp"  width="20" style="vertical-align:middle;" />&nbsp;**박성진** : 도커 기반 MSA 환경에서 컨테이너 통신 이슈를 해결하며, RAG와 XAI를 결합해 환각 현상을 최소화한 고신뢰 AI 서비스를 구현했습니다. 데이터 전처리부터 벡터 DB 구축, 안정적 배포까지 전 과정을 완주하며 실무적인 AI 파이프라인 설계 및 협업 역량을 확보했습니다.
+>
+><img src="https://i.namu.wiki/i/wm9ayfxu32DXRT9rqj6HO_sMUcowfUcb2mMN00lgJ-00GATqe9m1N4NK4F7Y1jX_qoXI4NMlyv3lE6vSEzl4eQ.webp" width="20" style="vertical-align:middle;" />&nbsp;**이상민** : 이번 프로젝트를 통해 처음으로 Docker 환경을 직접 구축하고 배포까지 진행해 보면서, 개발 환경 통일의 중요성과 버전 관리의 어려움을 동시에 느꼈다. 또한 초기에는 답변 품질이 낮았던 AI를 RAG, Retriever, 프론트엔드, 대화 기억 기능까지 지속적으로 개선하며 점차 더 완성도 높은 서비스로 발전시키는 과정에서 실질적인 문제 해결 경험을 쌓을 수 있었다.
+>
+> <img src="https://i.namu.wiki/i/YUIaJS34kTVBsx6qKlC8sITt64A0dgRmQRL2DfxSHhrZ5Zkje6zsA3LgqjYbtBy3Ik4Ta_ys2x08zMzxdzHhqQ.webp"  width="20" style="vertical-align:middle;" />&nbsp;**이채림** : RAG를 활용한 챗봇 웹 구현을 처음 제대로 진행하면서 다양한 오류로 어려움을 겪었지만, 성능이 낮던 챗봇을 점차 개선해 나가는 과정에서 큰 성취감을 느꼈습니다. 또한 Docker 환경을 수업 외 프로젝트에서 직접 다뤄보며 서비스 구조와 배포 흐름에 대한 이해를 깊이 있게 얻을 수 있었습니다. 
+>
+> <img src="https://media.discordapp.net/attachments/1490663056676618343/1490887724604067871/30594e2c97ecb60bae6b25b7c7c3f557.png?ex=69d5b0e4&is=69d45f64&hm=d1baa77a6f98a9cd425768d3af7456b01d80d9d8cc24d75985829a3bf018c294&=&format=webp&quality=lossless&width=810&height=810" width="20" style="vertical-align:middle;" />&nbsp;**임하영** : 이번 프로젝트를 통해 여러 서버가 맞물려 돌아가는 시스템 구조를 경험하며 데이터가 유기적으로 연결되는 과정의 중요성을 깊이 이해하였고, 특히 사용자 정보를 백엔드로 전달하는 전처리 단계의 정밀함이 서비스의 신뢰도를 결정짓는 핵심 요소임을 체감하며 전체적인 개발 흐름을 배웠습니다.
+>
+
+---
 
 # 8. 기술 스택 (Tech Stack)
+### 🖥 Frontend
+![Streamlit](https://img.shields.io/badge/Streamlit-FF4B4B?style=for-the-badge&logo=streamlit&logoColor=white)
+![CSS](https://img.shields.io/badge/css-%23663399.svg?style=for-the-badge&logo=css&logoColor=white)
+
+
+### ⚙️ Backend
+![Python](https://img.shields.io/badge/Python-3776AB?style=for-the-badge&logo=python&logoColor=white)
+![FastAPI](https://img.shields.io/badge/FastAPI-005571?style=for-the-badge&logo=fastapi)
+![Pandas](https://img.shields.io/badge/pandas-%23150458.svg?style=for-the-badge&logo=pandas&logoColor=white)
+![LangChain](https://img.shields.io/badge/langchain-%231C3C3C.svg?style=for-the-badge&logo=langchain&logoColor=white)
+![ChatGPT](https://img.shields.io/badge/chatGPT-74aa9c?style=for-the-badge&logo=openai&logoColor=white)
+
+
+### 🗄 Database
+![Postgres](https://img.shields.io/badge/postgres-%23316192.svg?style=for-the-badge&logo=postgresql&logoColor=white)
