@@ -136,8 +136,12 @@ SKN25-3rd-5Team/
 
 ```
 ### ERD
+<img width="899" height="1024" alt="Image" src="https://github.com/user-attachments/assets/f01c1a98-34bf-461e-8169-4b27456c5769" />
+<img width="876" height="427" alt="Image" src="https://github.com/user-attachments/assets/74efc33b-6c15-4a50-aaae-5e503de0ee1b" />
+<img width="906" height="432" alt="Image" src="https://github.com/user-attachments/assets/678ca0a9-1bc3-4908-9407-8a8dbb81c24d" />
+<img width="894" height="325" alt="Image" src="https://github.com/user-attachments/assets/9adf9dfd-949e-4b65-a298-21a0b36ca379" />
 
---
+---
 
 # 6. 페이지 소개
 ![Image](https://github.com/user-attachments/assets/b1ecf4cb-0796-4e21-83a7-17b5f2af7904)
