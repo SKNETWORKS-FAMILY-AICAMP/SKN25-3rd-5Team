@@ -198,3 +198,10 @@ SKN25-3rd-5Team/
 ![Git](https://img.shields.io/badge/Git-F05032?style=for-the-badge&logo=git&logoColor=white)
 ![GitHub](https://img.shields.io/badge/GitHub-181717?style=for-the-badge&logo=github&logoColor=white)
 ![Notion](https://img.shields.io/badge/Notion-000000?style=for-the-badge&logo=notion&logoColor=white)
+
+---
+# 9. 테스트 계획 (Test plan)
+
+본 프로젝트의 테스트 전략 및 검증 계획은 아래 문서에서 확인할 수 있습니다.
+
+👉 [테스트 계획 보기](./frontend/assets/test_plan.md)
